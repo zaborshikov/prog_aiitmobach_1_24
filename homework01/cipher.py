@@ -24,8 +24,7 @@ def get_start_ord(char_ord: int) -> Optional[int]:
         return A_ORD_CAP
     
     return None
-    
-    
+      
 
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     '''
@@ -82,5 +81,28 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     >>> decrypt_caesar("")
     ''
     '''
-    
+
     return encrypt_caesar(ciphertext, shift= -shift)
+
+
+if __name__ == '__main__':
+    shift = 3
+    plain_texts = ['PYTHON', 'python', 'Python3.6', '', 'abc', 'zaz', 'Prodam garazh']
+    cipher_texts = ['SBWKRQ', 'sbwkrq', 'Sbwkrq3.6', '', 'def', 'cdc', 'Surgdp jdudck']
+
+    errors_encrypt = 0
+    errors_decrypt = 0
+
+    for i in range(len(plain_texts)):
+        encrypted = encrypt_caesar(plain_texts[i], shift)
+        decrypted = decrypt_caesar(cipher_texts[i], shift)
+
+        if encrypted != cipher_texts[i]:
+            print(encrypted, cipher_texts[i])
+            errors_encrypt += 1
+        if decrypted != plain_texts[i]:
+            print(decrypted, plain_texts[i])
+            errors_decrypt += 1
+
+    print(f'Passed {len(plain_texts) - errors_encrypt}/{len(plain_texts)} tests in encrypt')
+    print(f'Passed {len(plain_texts) - errors_decrypt}/{len(plain_texts)} tests in decrypt')
