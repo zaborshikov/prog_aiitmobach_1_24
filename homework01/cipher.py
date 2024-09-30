@@ -106,7 +106,7 @@ def decrypt_key(key: str) -> list[int]:
         else:
             raise ValueError(f'Char {char} is not English letter')
 
-    return tuple(int_key)
+    return int_key
 
 
 def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False) -> str:
