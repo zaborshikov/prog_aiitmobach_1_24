@@ -104,7 +104,7 @@ def decrypt_key(key: str) -> list[int]:
         
     return tuple(int_key)
 
-def encrypt_vigenere(plaintext: str, key: str, decrypt=False) -> str:
+def encrypt_vigenere(plaintext: str, key: str, decrypt: bool=False) -> str:
     '''
     Apply a Vigenere cipher to text (only for english letters, other will be ignored)
     
@@ -126,6 +126,7 @@ def encrypt_vigenere(plaintext: str, key: str, decrypt=False) -> str:
     raw_ciphertext = []
     int_key = decrypt_key(key)
     key_size = len(int_key)
+    index_shift = 0
 
     if decrypt:
         int_key = [-i for i in int_key]
@@ -133,15 +134,15 @@ def encrypt_vigenere(plaintext: str, key: str, decrypt=False) -> str:
     for i, char in enumerate(plaintext):
         char_ord = ord(char)
         start = get_start_ord(char_ord)
-        shift = int_key[i % key_size]
 
         if start is not None:
+            shift = int_key[(i - index_shift) % key_size]
             encrypted_alpha = chr(start + (char_ord - start + shift) % SIZE_OF_ALPHABET)
         else:
             encrypted_alpha = char
         
         raw_ciphertext.append(encrypted_alpha)
-                
+
     return ''.join(raw_ciphertext)
 
 def decrypt_vigenere(plaintext: str, key: str) -> str:
@@ -165,7 +166,6 @@ def decrypt_vigenere(plaintext: str, key: str) -> str:
     return encrypt_vigenere(plaintext, key, True)
 
 if __name__ == '__main__':
-    
     # Ceaser
     print('CEASER')
     plain_texts = ['PYTHON', 'python', 'Python3.6', '', 'abc', 'zaz', 'Prodam garazh']
@@ -175,8 +175,32 @@ if __name__ == '__main__':
     errors_decrypt = 0
 
     for i in range(len(plain_texts)):
-        encrypted = encrypt_caesar(plain_texts[i], shift)
-        decrypted = decrypt_caesar(cipher_texts[i], shift)
+        encrypted = encrypt_caesar(plain_texts[i])
+        decrypted = decrypt_caesar(cipher_texts[i])
+
+        if encrypted != cipher_texts[i]:
+            print(encrypted, cipher_texts[i])
+            errors_encrypt += 1
+        if decrypted != plain_texts[i]:
+            print(decrypted, plain_texts[i])
+            errors_decrypt += 1
+
+    print(f'Passed {len(plain_texts) - errors_encrypt}/{len(plain_texts)} tests in encrypt')
+    print(f'Passed {len(plain_texts) - errors_decrypt}/{len(plain_texts)} tests in decrypt')
+
+
+    # Vigenere
+    print('\nVIGENERE')
+    plain_texts = ['PYTHON', 'python', 'ATTACKATDAWN', 'garazhvsyoechoprodaetsyaestakcii']
+    keys = ['A', 'a', 'LEMON', 'nedorogo']
+    cipher_texts = ['PYTHON', 'python', 'LXFOPVEFRNHR', 'teuoqvbglshqycvfbhdskgeorwwobqow']
+
+    errors_encrypt = 0
+    errors_decrypt = 0
+
+    for i in range(len(plain_texts)):
+        encrypted = encrypt_vigenere(plain_texts[i], keys[i])
+        decrypted = decrypt_vigenere(cipher_texts[i], keys[i])
 
         if encrypted != cipher_texts[i]:
             print(encrypted, cipher_texts[i])
