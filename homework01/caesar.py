@@ -1,3 +1,4 @@
+import typing as tp
 from typing import Optional
 
 A_ORD = ord('a')
@@ -87,6 +88,13 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
 
     return encrypt_caesar(ciphertext, shift=-shift)
 
+def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
+    """
+    Brute force breaking a Caesar cipher.
+    """
+    best_shift = 0
+    # PUT YOUR CODE HERE
+    return best_shift
 
 if __name__ == '__main__':
     plain_texts = ['PYTHON', 'python', 'Python3.6',

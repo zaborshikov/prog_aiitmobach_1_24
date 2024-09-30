@@ -1,4 +1,4 @@
-from ceaser import get_start_ord, SIZE_OF_ALPHABET
+from caesar import get_start_ord, SIZE_OF_ALPHABET
 
 
 def decrypt_key(key: str) -> list[int]:
@@ -23,7 +23,7 @@ def decrypt_key(key: str) -> list[int]:
 
 
 def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False,
-                     ignore_space: bool = True) -> str:
+                     ignore_space: bool = False) -> str:
     '''
     Apply a Vigenere cipher to text
     (only for english letters, other will be ignored)
@@ -77,7 +77,7 @@ def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False,
 
 
 def decrypt_vigenere(plaintext: str, key: str,
-                     ignore_space: bool = True) -> str:
+                     ignore_space: bool = False) -> str:
     '''
     Decrypt a Vigenre cipher to text
     (only for english letters, other will be ignored)

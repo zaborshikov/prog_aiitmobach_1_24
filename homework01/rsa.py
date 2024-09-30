@@ -7,7 +7,7 @@ def is_prime(n: int) -> bool:
     Tests to see if a number is prime.
 
     in  (int):  n for test
-    
+
     out (bool): is it prime
 
     >>> is_prime(2)
@@ -18,8 +18,10 @@ def is_prime(n: int) -> bool:
     False
     """
 
-    for i in range(1, int(n**0.5) + 1):
-        if n % i:
+    if n == 1: return False
+
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
             return False
 
     return True
@@ -53,8 +55,19 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
-    # PUT YOUR CODE HERE
-    pass
+    original_phi = phi
+    x0, x1 = 0, 1
+
+    while e > 1:
+        # Кратное и остаток
+        q = e // phi
+        e, phi = phi, e % phi
+        x0, x1 = x1 - q * x0, x0
+
+    if x1 < 0:
+        x1 += original_phi
+
+    return x1
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
@@ -63,11 +76,9 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
     elif p == q:
         raise ValueError("p and q cannot be equal")
 
-    # n = pq
-    # PUT YOUR CODE HERE
+    n = p * q
 
-    # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
+    phi = (p - 1) * (q - 1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
