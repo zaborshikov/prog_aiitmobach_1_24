@@ -1,81 +1,84 @@
-from typing import Callable, Union
+from typing import Callable, Union, List, Optional, Dict
 
 
-def accuracy_score(predicted: list, labels: list) -> float:
+def accuracy_score(predicted: List, labels: List) -> float:
     """
-    Calculating accuracy score
+    Calculate the accuracy score.
 
-    in:
-        predicted   (list): data that your model returns
-        labels      (list): data that your model needs to return
-    out:
-        score      (float): accuracy score
+    Args:
+        predicted (List[int]): Data that your model returns.
+        labels (List[int]): Data that your model needs to return.
 
-    >>> accuracy_score([1, 1, 0, 1], [1, 1, 1, 1])
-    0.75
-    >>> accuracy_score([0, 1], [0, 1])
-    1.0
-    >>> accuracy_score([1], [0])
-    0.0
+    Returns:
+        float: Accuracy score.
+
+    Examples:
+        >>> accuracy_score([1, 1, 0, 1], [1, 1, 1, 1])
+        0.75
+        >>> accuracy_score([0, 1], [0, 1])
+        1.0
+        >>> accuracy_score([1], [0])
+        0.0
     """
-
     size_of_data = len(labels)
     assert size_of_data == len(predicted)
+    assert predicted and labels
 
-    points = 0
-
-    for i in range(size_of_data):
-        points += labels[i] == predicted[i]
-
+    points = sum(1 for i in range(size_of_data) if labels[i] == predicted[i])
     score = points / size_of_data
 
     return score
 
 
 def test(
-    data: list,
-    labels: list,
+    data: List[tuple],
+    labels: List[int],
     func: Callable,
-    input_args: dict = {},
-    return_acuracy: bool = False,
+    input_args: Optional[Dict] = None,
+    return_accuracy: bool = False,
     print_errors: bool = False,
-) -> Union[float, list[bool]]:
+) -> Union[float, List[bool]]:
     """
     Testing your model
 
-    in:
-        data    (list): data given to function
-        out     (list): data
-        func    (function): function for testing
-        input_args  (list): input arguments for your function
-        return_acuracy  (bool): return accuracy score, not list of bools
-    out:
-        list of bools (if True - test passed)
-        OR accuracy score (if flag return_acuracy if True)
+    Args:
+        data (List[tuple]): Data given to function.
+        labels (List[int]): Expected output data.
+        func (Callable): Function for testing.
+        input_args (Optional[Dict]): Input arguments for your function.
+        return_accuracy (bool): Return accuracy score, not list of bools.
+        print_errors (bool): Print errors if any.
 
-    >>> test([(1, 1), (2, 1), (2, 4)],
-        [2, 3, 5], lambda a, b: a + b)
-    [True, True, False]
+    Returns:
+        Union[float, List[bool]]: List of bools (if True - test passed)
+        or accuracy score (if flag return_accuracy is True).
+
+    Examples:
+        >>> test([(1, 1), (2, 1), (2, 4)], [2, 3, 4], lambda a, b: a + b)
+        [True, True, False]
+        >>> test([(1, 1), (2, 1)], [2, 3], lambda a, b: a + b,
+            return_accuracy=True)
+        1.0
     """
+
+    if input_args is None:
+        input_args = {}
 
     size_of_data = len(data)
     assert size_of_data == len(labels)
 
     results = []
 
-    for i in range(size_of_data):
-        res = func(*data[i], **input_args)
+    for i, d in enumerate(data):
+        try:
+            result = func(*d, **input_args)
+            results.append(result == labels[i])
+        except Exception as e:
+            if print_errors:
+                print(f"Error in test case {i}: {e}")
+            results.append(False)
 
-        if print_errors:
-            if res != labels[i]:
-                print(f"ERROR: function returns [{res}], but need [{labels[i]}]")
-
-        if return_acuracy:
-            results.append(res)
-        else:
-            results.append(res == labels[i])
-
-    if return_acuracy:
-        return accuracy_score(results, labels)
+    if return_accuracy:
+        return sum(results) / len(results)
 
     return results

@@ -57,7 +57,9 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
         start = get_start_ord(char_ord)
 
         if start is not None:
-            encrypted_alpha = chr(start + (char_ord - start + shift) % SIZE_OF_ALPHABET)
+            encrypted_alpha = chr(
+                start + (char_ord - start + shift) % SIZE_OF_ALPHABET
+            )
         else:
             encrypted_alpha = char
 
@@ -90,7 +92,9 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     return encrypt_caesar(ciphertext, shift=-shift)
 
 
-def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
+def caesar_breaker_brute_force(
+    ciphertext: str, dictionary: tp.Set[str]
+) -> int:
     """
     Brute force breaking a Caesar cipher.
     """
@@ -100,11 +104,39 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
 
 
 if __name__ == "__main__":
-    plain_texts = ["PYTHON", "python", "Python3.6", "", "abc", "zaz", "Prodam garazh"]
-    cipher_texts = ["SBWKRQ", "sbwkrq", "Sbwkrq3.6", "", "def", "cdc", "Surgdp jdudck"]
+    plain_texts = [
+        "PYTHON",
+        "python",
+        "Python3.6",
+        "",
+        "abc",
+        "zaz",
+        "Prodam garazh",
+    ]
+    cipher_texts = [
+        "SBWKRQ",
+        "sbwkrq",
+        "Sbwkrq3.6",
+        "",
+        "def",
+        "cdc",
+        "Surgdp jdudck",
+    ]
 
-    score_encrypt = test(list(zip(plain_texts)), cipher_texts, encrypt_caesar, return_acuracy=True)
+    score_encrypt = test(
+        list(zip(plain_texts)),
+        cipher_texts,
+        encrypt_caesar,
+        return_acuracy=True,
+    )
 
-    score_decrypt = test(list(zip(cipher_texts)), plain_texts, decrypt_caesar, return_acuracy=True)
+    score_decrypt = test(
+        list(zip(cipher_texts)),
+        plain_texts,
+        decrypt_caesar,
+        return_acuracy=True,
+    )
 
-    print(f"Score in encrypt: {score_encrypt}, score in decrypt {score_decrypt}")
+    print(
+        f"Score in encrypt: {score_encrypt}, score in decrypt {score_decrypt}"
+    )

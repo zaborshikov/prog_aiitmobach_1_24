@@ -64,7 +64,9 @@ def encrypt_vigenere(
 
         if start is not None:
             shift = int_key[(i - index_shift) % key_size]
-            encrypted_alpha = chr(start + (char_ord - start + shift) % SIZE_OF_ALPHABET)
+            encrypted_alpha = chr(
+                start + (char_ord - start + shift) % SIZE_OF_ALPHABET
+            )
 
             i += 1
         else:
@@ -78,7 +80,9 @@ def encrypt_vigenere(
     return "".join(raw_ciphertext)
 
 
-def decrypt_vigenere(plaintext: str, key: str, ignore_space: bool = False) -> str:
+def decrypt_vigenere(
+    plaintext: str, key: str, ignore_space: bool = False
+) -> str:
     """
     Decrypt a Vigenre cipher to text
     (only for english letters, other will be ignored)
@@ -120,11 +124,21 @@ if __name__ == "__main__":
     ]
 
     score_encrypt = test(
-        list(zip(plain_texts, keys)), cipher_texts, encrypt_vigenere, {"ignore_space": True}, True
+        list(zip(plain_texts, keys)),
+        cipher_texts,
+        encrypt_vigenere,
+        {"ignore_space": True},
+        True,
     )
 
     score_decrypt = test(
-        list(zip(cipher_texts, keys)), plain_texts, decrypt_vigenere, {"ignore_space": True}, True
+        list(zip(cipher_texts, keys)),
+        plain_texts,
+        decrypt_vigenere,
+        {"ignore_space": True},
+        True,
     )
 
-    print(f"Score in encrypt: {score_encrypt}, score in decrypt {score_decrypt}")
+    print(
+        f"Score in encrypt: {score_encrypt}, score in decrypt {score_decrypt}"
+    )
