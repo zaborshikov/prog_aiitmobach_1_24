@@ -1,15 +1,17 @@
 import typing as tp
 from typing import Optional
 
-A_ORD = ord('a')
-Z_ORD = ord('z')
-A_ORD_CAP = ord('A')
-Z_ORD_CAP = ord('Z')
+from testing import test
+
+A_ORD = ord("a")
+Z_ORD = ord("z")
+A_ORD_CAP = ord("A")
+Z_ORD_CAP = ord("Z")
 SIZE_OF_ALPHABET = Z_ORD - A_ORD + 1
 
 
 def get_start_ord(char_ord: int) -> Optional[int]:
-    '''
+    """
     Return ord of 'A' in the alphabet (lower or capital) and None
     if input is not an ord of letter of English alphabet.
 
@@ -17,7 +19,7 @@ def get_start_ord(char_ord: int) -> Optional[int]:
         letter ord
     out (int):
         starter ord or None (if it is not a letter)
-    '''
+    """
 
     if A_ORD <= char_ord <= Z_ORD:
         return A_ORD
@@ -28,7 +30,7 @@ def get_start_ord(char_ord: int) -> Optional[int]:
 
 
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
-    '''
+    """
     Apply a Caesar cipher to text
     (only for english letters, other will be ignored)
 
@@ -46,7 +48,7 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     'Sbwkrq3.6'
     >>> encrypt_caesar("")
     ''
-    '''
+    """
 
     raw_ciphertext = []
 
@@ -55,18 +57,17 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
         start = get_start_ord(char_ord)
 
         if start is not None:
-            encrypted_alpha = chr(
-                start + (char_ord - start + shift) % SIZE_OF_ALPHABET)
+            encrypted_alpha = chr(start + (char_ord - start + shift) % SIZE_OF_ALPHABET)
         else:
             encrypted_alpha = char
 
         raw_ciphertext.append(encrypted_alpha)
 
-    return ''.join(raw_ciphertext)
+    return "".join(raw_ciphertext)
 
 
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
-    '''
+    """
     Decrypt a Caesar cipher to text
     (only for english letters, other will be ignored)
 
@@ -84,13 +85,12 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     'Python3.6'
     >>> decrypt_caesar("")
     ''
-    '''
+    """
 
     return encrypt_caesar(ciphertext, shift=-shift)
 
 
-def caesar_breaker_brute_force(ciphertext: str,
-                               dictionary: tp.Set[str]) -> int:
+def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
     """
     Brute force breaking a Caesar cipher.
     """
@@ -99,28 +99,12 @@ def caesar_breaker_brute_force(ciphertext: str,
     return best_shift
 
 
-if __name__ == '__main__':
-    plain_texts = ['PYTHON', 'python', 'Python3.6',
-                   '', 'abc', 'zaz', 'Prodam garazh']
-    cipher_texts = ['SBWKRQ', 'sbwkrq', 'Sbwkrq3.6',
-                    '', 'def', 'cdc', 'Surgdp jdudck']
+if __name__ == "__main__":
+    plain_texts = ["PYTHON", "python", "Python3.6", "", "abc", "zaz", "Prodam garazh"]
+    cipher_texts = ["SBWKRQ", "sbwkrq", "Sbwkrq3.6", "", "def", "cdc", "Surgdp jdudck"]
 
-    errors_encrypt = 0
-    errors_decrypt = 0
+    score_encrypt = test(list(zip(plain_texts)), cipher_texts, encrypt_caesar, return_acuracy=True)
 
-    for i in range(len(plain_texts)):
-        encrypted = encrypt_caesar(plain_texts[i])
-        decrypted = decrypt_caesar(cipher_texts[i])
+    score_decrypt = test(list(zip(cipher_texts)), plain_texts, decrypt_caesar, return_acuracy=True)
 
-        if encrypted != cipher_texts[i]:
-            print(encrypted, cipher_texts[i])
-            errors_encrypt += 1
-        if decrypted != plain_texts[i]:
-            print(decrypted, plain_texts[i])
-            errors_decrypt += 1
-
-    encrypt_score = f'{len(plain_texts) - errors_encrypt}/{len(plain_texts)}'
-    decrypt_score = f'{len(plain_texts) - errors_decrypt}/{len(plain_texts)}'
-
-    print(f'Passed {encrypt_score} tests in encrypt')
-    print(f'Passed {decrypt_score} tests in decrypt')
+    print(f"Score in encrypt: {score_encrypt}, score in decrypt {score_decrypt}")

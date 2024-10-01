@@ -1,13 +1,15 @@
-from caesar import get_start_ord, SIZE_OF_ALPHABET
+from caesar import SIZE_OF_ALPHABET, get_start_ord
+from testing import test
 
 
 def decrypt_key(key: str) -> list[int]:
-    '''
+    """
     Create key from word for Vigenere ciphere
 
     in (str): str key (only english letters)
     out (list[int]): key for encrypt/decrypt
-    '''
+    """
+
     int_key = []
 
     for char in key:
@@ -17,14 +19,15 @@ def decrypt_key(key: str) -> list[int]:
         if start is not None:
             int_key.append(char_ord - start)
         else:
-            raise ValueError(f'Char {char} is not English letter')
+            raise ValueError(f"Char {char} is not English letter")
 
     return int_key
 
 
-def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False,
-                     ignore_space: bool = False) -> str:
-    '''
+def encrypt_vigenere(
+    plaintext: str, key: str, decrypt: bool = False, ignore_space: bool = False
+) -> str:
+    """
     Apply a Vigenere cipher to text
     (only for english letters, other will be ignored)
 
@@ -44,7 +47,7 @@ def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False,
     'python'
     >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
     'LXFOPVEFRNHR'
-    '''
+    """
 
     raw_ciphertext = []
     int_key = decrypt_key(key)
@@ -61,8 +64,7 @@ def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False,
 
         if start is not None:
             shift = int_key[(i - index_shift) % key_size]
-            encrypted_alpha = chr(
-                start + (char_ord - start + shift) % SIZE_OF_ALPHABET)
+            encrypted_alpha = chr(start + (char_ord - start + shift) % SIZE_OF_ALPHABET)
 
             i += 1
         else:
@@ -73,12 +75,11 @@ def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False,
 
         raw_ciphertext.append(encrypted_alpha)
 
-    return ''.join(raw_ciphertext)
+    return "".join(raw_ciphertext)
 
 
-def decrypt_vigenere(plaintext: str, key: str,
-                     ignore_space: bool = False) -> str:
-    '''
+def decrypt_vigenere(plaintext: str, key: str, ignore_space: bool = False) -> str:
+    """
     Decrypt a Vigenre cipher to text
     (only for english letters, other will be ignored)
 
@@ -96,36 +97,34 @@ def decrypt_vigenere(plaintext: str, key: str,
     'python'
     >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
     'ATTACKATDAWN'
-    '''
+    """
 
     return encrypt_vigenere(plaintext, key, True, ignore_space)
 
 
-if __name__ == '__main__':
-    plain_texts = ['PYTHON', 'python', 'ATTACKATDAWN',
-                   'garazhvsyoechoprodaetsyaestakcii',
-                   'GARAZH KUPI!!']
-    keys = ['A', 'a', 'LEMON', 'nedorogo', 'BIRO']
-    cipher_texts = ['PYTHON', 'python', 'LXFOPVEFRNHR',
-                    'teuoqvbglshqycvfbhdskgeorwwobqow',
-                    'HIIOAP BIQQ!!']
+if __name__ == "__main__":
+    plain_texts = [
+        "PYTHON",
+        "python",
+        "ATTACKATDAWN",
+        "garazhvsyoechoprodaetsyaestakcii",
+        "GARAZH KUPI!!",
+    ]
+    keys = ["A", "a", "LEMON", "nedorogo", "BIRO"]
+    cipher_texts = [
+        "PYTHON",
+        "python",
+        "LXFOPVEFRNHR",
+        "teuoqvbglshqycvfbhdskgeorwwobqow",
+        "HIIOAP BIQQ!!",
+    ]
 
-    errors_encrypt = 0
-    errors_decrypt = 0
+    score_encrypt = test(
+        list(zip(plain_texts, keys)), cipher_texts, encrypt_vigenere, {"ignore_space": True}, True
+    )
 
-    for i in range(len(plain_texts)):
-        encrypted = encrypt_vigenere(plain_texts[i], keys[i])
-        decrypted = decrypt_vigenere(cipher_texts[i], keys[i])
+    score_decrypt = test(
+        list(zip(cipher_texts, keys)), plain_texts, decrypt_vigenere, {"ignore_space": True}, True
+    )
 
-        if encrypted != cipher_texts[i]:
-            print(encrypted, cipher_texts[i])
-            errors_encrypt += 1
-        if decrypted != plain_texts[i]:
-            print(decrypted, plain_texts[i])
-            errors_decrypt += 1
-
-    encrypt_score = f'{len(plain_texts) - errors_encrypt}/{len(plain_texts)}'
-    decrypt_score = f'{len(plain_texts) - errors_decrypt}/{len(plain_texts)}'
-
-    print(f'Passed {encrypt_score} tests in encrypt')
-    print(f'Passed {decrypt_score} tests in decrypt')
+    print(f"Score in encrypt: {score_encrypt}, score in decrypt {score_decrypt}")
