@@ -68,7 +68,7 @@ def encrypt_vigenere(plaintext: str, key: str, decrypt: bool = False,
         else:
             encrypted_alpha = char
 
-            if ignore_space is not True:
+            if ignore_space is False:
                 i += 1
 
         raw_ciphertext.append(encrypted_alpha)
