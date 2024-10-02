@@ -152,17 +152,20 @@ def caesar_breaker_brute_force(
 
 if __name__ == "__main__":
 
-    shifts = [randint(0, 24) for _ in range(9)]
-    results = [
-        caesar_breaker_brute_force(
-            encrypt_caesar("Hello how are you", shift), ("hello", "hi")
-        )
-        for shift in shifts
-    ] + [caesar_breaker_brute_force("Nothing", ("hello", "hi"))]
+    shifts = [randint(0, 24) for _ in range(9)] + [-1]
 
-    shifts.append(-1)
+    score_bruteforce = test(
+        [
+            (encrypt_caesar("Hello how are you", shift), {"hello", "hi"})
+            for shift in shifts[:-1]
+        ]
+        + [("Nothing", {"hello", "hi"})],
+        shifts,
+        caesar_breaker_brute_force,
+        return_accuracy=True,
+    )
 
-    print(f"Score in bruteforce: {accuracy_score(results, shifts)}")
+    print(f"Score in bruteforce: {score_bruteforce}")
 
     plain_texts = [
         "PYTHON",
