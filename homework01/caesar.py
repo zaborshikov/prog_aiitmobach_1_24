@@ -1,5 +1,6 @@
 import typing as tp
 from typing import Optional
+from random import randint
 
 from testing import accuracy_score, test
 
@@ -104,7 +105,7 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
 
 
 def caesar_breaker_brute_force(
-    ciphertext: str, dictionary: tp.Set[str]
+    ciphertext: str, dictionary: tp.Set[str], return_text: bool = False
 ) -> int:
     """
     Attempts to break a Caesar cipher by brute force.
@@ -136,26 +137,31 @@ def caesar_breaker_brute_force(
             )
         6
     """
-    best_shift = 0
+    shift = 0
 
-    for best_shift in range(24 + 1):
-        result = decrypt_caesar(ciphertext, best_shift)
+    for shift in range(24 + 1):
+        result = decrypt_caesar(ciphertext, shift)
         for word in result.lower().split():
             if word in dictionary:
-                return best_shift
+                if return_text:
+                    return result
+                return shift
 
     return -1
 
 
 if __name__ == "__main__":
-    print(
-        "Test of bruteforce: passed."
-        if caesar_breaker_brute_force(
-            encrypt_caesar("Hello how are you?", shift=6), ("hello", "hi")
+
+    shifts = [randint(0, 24) for _ in range(10)]
+
+    results = [
+        caesar_breaker_brute_force(
+            encrypt_caesar("Hello how are you", shift), {"hello", "hi"}
         )
-        == 6
-        else "Test of bruteforce: failed."
-    )
+        for shift in shifts
+    ]
+
+    print(f"Score in bruteforce: {accuracy_score(results, shifts)}")
 
     plain_texts = [
         "PYTHON",
