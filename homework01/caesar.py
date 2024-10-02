@@ -1,7 +1,7 @@
 import typing as tp
 from typing import Optional
 
-from testing import test
+from testing import accuracy_score, test
 
 A_ORD = ord("a")
 Z_ORD = ord("z")
@@ -12,13 +12,16 @@ SIZE_OF_ALPHABET = Z_ORD - A_ORD + 1
 
 def get_start_ord(char_ord: int) -> Optional[int]:
     """
-    Return ord of 'A' in the alphabet (lower or capital) and None
-    if input is not an ord of letter of English alphabet.
+    Determine the starting ordinal value for a given character ordinal.
 
-    in  (int):
-        letter ord
-    out (int):
-        starter ord or None (if it is not a letter)
+    Args:
+        char_ord (int): The ordinal value of the character.
+
+    Returns:
+        Optional[int]: The starting ordinal value for the alphabet
+        (either lowercase 'a' or uppercase 'A') if the character is
+        an English letter. Returns None if the character is not an
+        English letter.
     """
 
     if A_ORD <= char_ord <= Z_ORD:
@@ -31,23 +34,29 @@ def get_start_ord(char_ord: int) -> Optional[int]:
 
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     """
-    Apply a Caesar cipher to text
-    (only for english letters, other will be ignored)
+    Encrypts the given plaintext using the Caesar cipher technique.
+    The Caesar cipher shifts each letter in the plaintext
+    by a specified number of positions
+    down the alphabet. Non-alphabetic (only english)
+    characters are not affected.
 
-    in:
-        plaintext   (str): your text for encrypting
-        *shift      (int): shift for encrypting, default 3
-    out (str):
-        encrypted text
+    Args:
+        plaintext (str): The text to be encrypted.
+        shift (int, optional): The number of positions to shift each letter.
+        Defaults to 3.
 
-    >>> encrypt_caesar("PYTHON")
-    'SBWKRQ'
-    >>> encrypt_caesar("python")
-    'sbwkrq'
-    >>> encrypt_caesar("Python3.6")
-    'Sbwkrq3.6'
-    >>> encrypt_caesar("")
-    ''
+    Returns:
+        str: The encrypted text.
+
+    Examples:
+        >>> encrypt_caesar("PYTHON")
+        'SBWKRQ'
+        >>> encrypt_caesar("python")
+        'sbwkrq'
+        >>> encrypt_caesar("Python3.6")
+        'Sbwkrq3.6'
+        >>> encrypt_caesar("")
+        ''
     """
 
     raw_ciphertext = []
@@ -70,23 +79,25 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
 
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     """
-    Decrypt a Caesar cipher to text
-    (only for english letters, other will be ignored)
+    Decrypt a Caesar cipher text
+    (only for English letters, others will be ignored)
 
-    in:
-        plaintext   (str): your text for decrypting
-        *shift      (int): shift for decrypting, default 3
-    out (str):
-        decrypted text
+    Args:
+        ciphertext (str): The text to be decrypted.
+        shift (int): The shift used for decrypting, default is 3.
 
-    >>> decrypt_caesar("SBWKRQ")
-    'PYTHON'
-    >>> decrypt_caesar("sbwkrq")
-    'python'
-    >>> decrypt_caesar("Sbwkrq3.6")
-    'Python3.6'
-    >>> decrypt_caesar("")
-    ''
+    Returns:
+        str: The decrypted text.
+
+    Examples:
+        >>> decrypt_caesar("SBWKRQ")
+        'PYTHON'
+        >>> decrypt_caesar("sbwkrq")
+        'python'
+        >>> decrypt_caesar("Sbwkrq3.6")
+        'Python3.6'
+        >>> decrypt_caesar("")
+        ''
     """
 
     return encrypt_caesar(ciphertext, shift=-shift)
@@ -96,14 +107,56 @@ def caesar_breaker_brute_force(
     ciphertext: str, dictionary: tp.Set[str]
 ) -> int:
     """
-    Brute force breaking a Caesar cipher.
+    Attempts to break a Caesar cipher by brute force.
+    This function tries all possible shifts
+    (from 0 to 24) to decrypt the given
+    ciphertext and checks if the resulting
+    plaintext is a valid word in the provided
+    dictionary. It returns the shift value
+    that successfully decrypts the ciphertext
+    into a valid word.
+
+    Works only with english letters and spaces.
+
+    Args:
+        ciphertext (str): The encrypted message to be decrypted.
+        dictionary (tp.Set[str]): A set of valid
+        words to check against the decrypted text.
+
+    Returns:
+        int: The shift value that successfully
+        decrypts the ciphertext into a valid word.
+        If no valid word is found, it returns the
+        last shift value (24).
+
+    Examples:
+        >>> caesar_breaker_brute_force( \
+                encrypt_caesar('Hello how are you', shift=6), \
+                ("hello", "hi") \
+            )
+        6
     """
     best_shift = 0
-    # PUT YOUR CODE HERE
-    return best_shift
+
+    for best_shift in range(24 + 1):
+        result = decrypt_caesar(ciphertext, best_shift)
+        for word in result.lower().split():
+            if word in dictionary:
+                return best_shift
+
+    return -1
 
 
 if __name__ == "__main__":
+    print(
+        "Test of bruteforce: passed."
+        if caesar_breaker_brute_force(
+            encrypt_caesar("Hello how are you?", shift=6), ("hello", "hi")
+        )
+        == 6
+        else "Test of bruteforce: failed."
+    )
+
     plain_texts = [
         "PYTHON",
         "python",
@@ -127,14 +180,14 @@ if __name__ == "__main__":
         list(zip(plain_texts)),
         cipher_texts,
         encrypt_caesar,
-        return_acuracy=True,
+        return_accuracy=True,
     )
 
     score_decrypt = test(
         list(zip(cipher_texts)),
         plain_texts,
         decrypt_caesar,
-        return_acuracy=True,
+        return_accuracy=True,
     )
 
     print(

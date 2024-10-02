@@ -4,18 +4,18 @@ import typing as tp
 
 def is_prime(n: int) -> bool:
     """
-    Tests to see if a number is prime.
-
-    in  (int):  n for test
-
-    out (bool): is it prime
-
-    >>> is_prime(2)
-    True
-    >>> is_prime(11)
-    True
-    >>> is_prime(8)
-    False
+    Determine if a given number is prime.
+    Args:
+        n (int): The number to test for primality.
+    Returns:
+        bool: True if the number is prime, False otherwise.
+    Examples:
+        >>> is_prime(2)
+        True
+        >>> is_prime(11)
+        True
+        >>> is_prime(8)
+        False
     """
 
     if n == 1:
@@ -30,16 +30,18 @@ def is_prime(n: int) -> bool:
 
 def gcd(a: int, b: int) -> int:
     """
-    Euclid's algorithm for determining the greatest common divisor.
-
-    in  (int):  a, b for searching
-
-    out (bool): gcd
-
-    >>> gcd(12, 15)
-    3
-    >>> gcd(3, 7)
-    1
+    Compute the greatest common divisor (GCD)
+    of two numbers using Euclid's algorithm.
+    Args:
+        a (int): First number.
+        b (int): Second number.
+    Returns:
+        int: The GCD of the two numbers.
+    Examples:
+        >>> gcd(12, 15)
+        3
+        >>> gcd(3, 7)
+        1
     """
 
     if b == 0:
@@ -52,9 +54,9 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     """
     Euclid's extended algorithm for finding the multiplicative
     inverse of two numbers.
-
-    >>> multiplicative_inverse(7, 40)
-    23
+    Examples:
+        >>> multiplicative_inverse(7, 40)
+        23
     """
     original_phi = phi
     x, y = 0, 1

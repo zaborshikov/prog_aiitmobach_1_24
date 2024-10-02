@@ -1,4 +1,4 @@
-from typing import Callable, Union, List, Optional, Dict
+from typing import Callable, Dict, List, Optional, Union
 
 
 def accuracy_score(predicted: List, labels: List) -> float:

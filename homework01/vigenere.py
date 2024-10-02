@@ -4,10 +4,25 @@ from testing import test
 
 def decrypt_key(key: str) -> list[int]:
     """
-    Create key from word for Vigenere ciphere
-
-    in (str): str key (only english letters)
-    out (list[int]): key for encrypt/decrypt
+    Generate a list of integer shifts from a given key for the Vigenere cipher.
+    Args:
+        key (str): The key used for encryption/decryption,
+        consisting only of English letters.
+    Returns:
+        list[int]: A list of integer shifts
+        corresponding to each character in the key.
+    Raises:
+        ValueError: If the key contains characters that are not
+        English letters.
+    Example:
+        >>> decrypt_key("ABC")
+        [0, 1, 2]
+        >>> decrypt_key("xyz")
+        [23, 24, 25]
+        >>> decrypt_key("A1C")
+        Traceback (most recent call last):
+            ...
+        ValueError: Char 1 is not English letter
     """
 
     int_key = []
@@ -28,25 +43,25 @@ def encrypt_vigenere(
     plaintext: str, key: str, decrypt: bool = False, ignore_space: bool = False
 ) -> str:
     """
-    Apply a Vigenere cipher to text
-    (only for english letters, other will be ignored)
+    Apply a Vigenere cipher to the given text.
+    This function supports both encryption and decryption.
 
-    in:
-        plaintext       (str):  your text for encrypting
-        key             (int):  key for encrypting
-        *decrypt        (bool): decrypt plaintext by key, defalut False
-        *ignore_space   (bool): ignore not english letters in indexing,
-            default True
+    Args:
+        plaintext (str): The text to be encrypted or decrypted.
+        key (str): The key used for the Vigenere cipher.
+        It should be a string of letters.
+        decrypt (bool, optional): If True,
+        the function will decrypt the plaintext.
+        Defaults to False.
+        ignore_space (bool, optional): If True,
+        non-English letters will be ignored in indexing. Defaults to False.
 
-    out (str):
-        encrypted text
+    Returns:
+        str: The resulting encrypted or decrypted text.
 
-    >>> encrypt_vigenere("PYTHON", "A")
-    'PYTHON'
-    >>> encrypt_vigenere("python", "a")
-    'python'
-    >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
-    'LXFOPVEFRNHR'
+    Examples:
+        >>> encrypt_vigenere("LXFOPVEFRNHR", "LEMON", decrypt=True)
+        'ATTACKATDAWN'
     """
 
     raw_ciphertext = []
@@ -84,23 +99,26 @@ def decrypt_vigenere(
     plaintext: str, key: str, ignore_space: bool = False
 ) -> str:
     """
-    Decrypt a Vigenre cipher to text
-    (only for english letters, other will be ignored)
+    Decrypt a Vigenere cipher to text.
+    This function decrypts the given text using the provided key.
 
-    in:
-        plaintext   (str): your text for decrypting
-        key         (str): key for decrypting
-        *ignore_space   (bool): ignore not english letters in indexing,
-            default True
-    out (str):
-        decrypted text
+    Args:
+        plaintext (str): The text to be decrypted.
+        key (str): The key used for the Vigenere cipher.
+        It should be a string of letters.
+        ignore_space (bool, optional): If True,
+        non-English letters will be ignored in indexing. Defaults to False.
 
-    >>> decrypt_vigenere("PYTHON", "A")
-    'PYTHON'
-    >>> decrypt_vigenere("python", "a")
-    'python'
-    >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
-    'ATTACKATDAWN'
+    Returns:
+        str: The decrypted text.
+
+    Examples:
+        >>> decrypt_vigenere("PYTHON", "A")
+        'PYTHON'
+        >>> decrypt_vigenere("python", "a")
+        'python'
+        >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
+        'ATTACKATDAWN'
     """
 
     return encrypt_vigenere(plaintext, key, True, ignore_space)
