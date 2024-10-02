@@ -5,10 +5,13 @@ import typing as tp
 def is_prime(n: int) -> bool:
     """
     Determine if a given number is prime.
+
     Args:
         n (int): The number to test for primality.
+
     Returns:
         bool: True if the number is prime, False otherwise.
+
     Examples:
         >>> is_prime(2)
         True
@@ -32,11 +35,14 @@ def gcd(a: int, b: int) -> int:
     """
     Compute the greatest common divisor (GCD)
     of two numbers using Euclid's algorithm.
+
     Args:
         a (int): First number.
         b (int): Second number.
+
     Returns:
         int: The GCD of the two numbers.
+
     Examples:
         >>> gcd(12, 15)
         3
@@ -54,6 +60,7 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     """
     Euclid's extended algorithm for finding the multiplicative
     inverse of two numbers.
+
     Examples:
         >>> multiplicative_inverse(7, 40)
         23

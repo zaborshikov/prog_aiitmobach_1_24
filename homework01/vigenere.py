@@ -5,15 +5,19 @@ from testing import test
 def decrypt_key(key: str) -> list[int]:
     """
     Generate a list of integer shifts from a given key for the Vigenere cipher.
+
     Args:
         key (str): The key used for encryption/decryption,
         consisting only of English letters.
+
     Returns:
         list[int]: A list of integer shifts
         corresponding to each character in the key.
+
     Raises:
         ValueError: If the key contains characters that are not
         English letters.
+
     Example:
         >>> decrypt_key("ABC")
         [0, 1, 2]
