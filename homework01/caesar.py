@@ -1,6 +1,6 @@
 import typing as tp
-from typing import Optional
 from random import randint
+from typing import Optional
 
 from testing import accuracy_score, test
 

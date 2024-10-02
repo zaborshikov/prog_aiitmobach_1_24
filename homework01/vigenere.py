@@ -24,6 +24,7 @@ def decrypt_key(key: str) -> list[int]:
             ...
         ValueError: Char 1 is not English letter
     """
+    assert key and key.isalpha()
 
     int_key = []
 
